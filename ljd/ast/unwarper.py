@@ -719,7 +719,8 @@ def _get_operator(block, true, end):
 		elif isinstance(src, nodes.Identifier):
 			is_true = True
 		else:
-			assert src is None
+                        # this works strange
+                        # assert src is None
 
 			is_true = block.warp.target == true
 
