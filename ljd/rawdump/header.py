@@ -74,6 +74,7 @@ def _read_flags(parser, header):
 	header.flags.has_ffi = bits & _FLAG_HAS_FFI
 	bits &= ~_FLAG_HAS_FFI
 
+	parser.flags.is_stripped = header.flags.is_stripped
 	if bits != 0:
 		errprint("Unknown flags set: {0:08b}", bits)
 		return False
