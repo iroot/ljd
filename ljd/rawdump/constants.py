@@ -7,6 +7,8 @@ import struct
 
 import ljd.bytecode.constants
 
+ENCODING = "CP1251"
+
 BCDUMP_KGC_CHILD = 0
 BCDUMP_KGC_TAB = 1
 BCDUMP_KGC_I64 = 2
@@ -54,7 +56,7 @@ def _read_complex_constants(parser, complex_constants):
 
             string = parser.stream.read_bytes(length)
 
-            complex_constants.append(string.decode("ascii"))
+            complex_constants.append(string.decode(ENCODING))
         elif constant_type == BCDUMP_KGC_TAB:
             table = ljd.bytecode.constants.Table()
 
@@ -156,7 +158,7 @@ def _read_table_item(parser):
     if data_type >= BCDUMP_KTAB_STR:
         length = data_type - BCDUMP_KTAB_STR
 
-        return parser.stream.read_bytes(length).decode("ascii")
+        return parser.stream.read_bytes(length).decode(ENCODING)
 
     elif data_type == BCDUMP_KTAB_INT:
         return _read_signed_int(parser)

@@ -6,6 +6,8 @@ import sys
 
 import ljd.bytecode.debuginfo
 
+ENCODING = "CP1251"
+
 VARNAME_END = 0
 VARNAME_FOR_IDX = 1
 VARNAME_FOR_STOP = 2
@@ -56,7 +58,7 @@ def _read_lineinfo(parser, line_offset, lineinfo):
 def _read_upvalue_names(parser, names):
     while len(names) < parser.upvalues_count:
         string = parser.stream.read_zstring()
-        names.append(string.decode("ascii"))
+        names.append(string.decode(ENCODING))
 
     return True
 
@@ -74,7 +76,7 @@ def _read_variable_infos(parser, infos):
             prefix = internal_vartype.to_bytes(1, sys.byteorder)
             suffix = parser.stream.read_zstring()
 
-            info.name = (prefix + suffix).decode("ascii")
+            info.name = (prefix + suffix).decode(ENCODING)
             info.type = info.T_VISIBILE
 
         elif internal_vartype == VARNAME_END:
