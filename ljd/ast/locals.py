@@ -21,6 +21,7 @@ class _LocalsMarker(traverse.Visitor):
 			self.pending_slots = {}
 			self.debuginfo = None
 			self.addr = -1
+			self.last_func_assign = None
 
 	def __init__(self):
 		self._states = []
@@ -100,6 +101,37 @@ class _LocalsMarker(traverse.Visitor):
 			slots = queue.setdefault(node.slot, [])
 
 			slots.append(node)
+
+	# ##
+	# local function
+	# if this is an assignment
+	# remember the dest slot (in 'state') if this was a FNEW
+	# every assignment clear the remembered dest
+	# if this is GSET then silently delete dest
+	# (or set corresponding names?)
+	def visit_assignment(self, node):
+		src = node.expressions.contents[0]
+		dst = node.destinations.contents[0]
+		# print(type(dst), " = ", type(src))
+		if isinstance(dst, nodes.TableElement):
+			self._state().last_func_assign = None
+			return
+
+		if isinstance(src, nodes.FunctionDefinition):
+			self._state().last_func_assign = node
+		else:
+			assignment = self._state().last_func_assign
+			self._state().last_func_assign = None
+
+			if assignment == None:
+				return
+
+			assign_dest = assignment.destinations.contents[0]
+			assignment.type = nodes.Assignment.T_LOCAL_DEFINITION
+			assign_dest.type = nodes.Identifier.T_LOCAL
+			if assign_dest.name == None:
+				# stub for validator
+				assign_dest.name = "local_func"
 
 	# ##
 
