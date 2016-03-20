@@ -37,7 +37,7 @@ import ljd.lua.writer
 
 
 def dump(name, obj, level=0):
-    indent = level * '\t'
+    indent = level * '   '
 
     if name is not None:
         prefix = indent + name + " = "

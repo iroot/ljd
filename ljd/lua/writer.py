@@ -819,7 +819,7 @@ def _process_queue(fd, queue):
             assert cmd[0] == CMD_WRITE
 
             if line_broken:
-                fd.write(indent * '\t')
+                fd.write(indent * '    ')
                 line_broken = False
 
             _id, fmt, args, kargs = cmd
